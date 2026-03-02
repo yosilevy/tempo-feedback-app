@@ -182,7 +182,6 @@ export default function App() {
   const lastDetectionRef = useRef(0);
   const lastHitRef = useRef<number | null>(null);
   const tapIntervalsRef = useRef<number[]>([]);
-  const previousRmsRef = useRef(0);
   const loudEvidenceRef = useRef(0);
   const quietEvidenceRef = useRef(0);
   const loudStreakRef = useRef(0);
@@ -256,7 +255,6 @@ export default function App() {
     listeningStartedAtRef.current = null;
     lastDetectionRef.current = 0;
     noiseFloorRef.current = 0.01;
-    previousRmsRef.current = 0;
     loudEvidenceRef.current = 0;
     quietEvidenceRef.current = 0;
     loudStreakRef.current = 0;
@@ -339,12 +337,12 @@ export default function App() {
   }
 
   async function startListening() {
+    stopListening();
     setErrorMessage('');
     setTempoFeedback('listening');
     setVolumeFeedback('good');
     setUserTapBpm(null);
     setMicLevel(0);
-    stopListening();
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -381,18 +379,22 @@ export default function App() {
         setMicLevel(Math.min(1, rms * 10));
 
         const floor = noiseFloorRef.current;
-        const floorSmoothing = rms < floor ? 0.08 : 0.02;
-        noiseFloorRef.current = floor + (rms - floor) * floorSmoothing;
+        const floorUpdateCutoff = floor + 0.02;
+        if (rms < floorUpdateCutoff) {
+          const floorSmoothing = rms < floor ? 0.08 : 0.02;
+          noiseFloorRef.current = floor + (rms - floor) * floorSmoothing;
+        } else {
+          noiseFloorRef.current = floor * 0.995;
+        }
 
         const volumeTarget = mapVolumeLevelToTargetEnergy(volumeLevel);
-        const threshold = noiseFloorRef.current + volumeTarget * 0.55;
+        const threshold = noiseFloorRef.current + volumeTarget * 0.38;
         const now = performance.now();
-        const minSpacingMs = 180;
+        const minSpacingMs = 120;
         const minTapIntervalMs = 220;
         const maxTapIntervalMs = 2500;
-        const isRisingEdge = previousRmsRef.current <= threshold && rms > threshold;
 
-        if (isRisingEdge && now - lastDetectionRef.current > minSpacingMs) {
+        if (rms > threshold && now - lastDetectionRef.current > minSpacingMs) {
           lastDetectionRef.current = now;
 
           const volumeRules = getVolumeRules(volumeLevel);
@@ -477,8 +479,6 @@ export default function App() {
             tenSeconds: false
           };
         }
-
-        previousRmsRef.current = rms;
 
         rafRef.current = requestAnimationFrame(run);
       };
