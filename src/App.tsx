@@ -387,7 +387,7 @@ export default function App() {
         const volumeTarget = mapVolumeLevelToTargetEnergy(volumeLevel);
         const threshold = noiseFloorRef.current + volumeTarget * 0.55;
         const now = performance.now();
-        const minSpacingMs = 180;
+        const minSpacingMs = 181;
         const minTapIntervalMs = 220;
         const maxTapIntervalMs = 2500;
         const isRisingEdge = previousRmsRef.current <= threshold && rms > threshold;
