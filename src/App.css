@@ -341,9 +341,114 @@ h1 {
 }
 
 @media (max-width: 640px) {
-  .controls,
-  .feedbackArea,
+  .appShell {
+    padding: 10px;
+  }
+
+  .panel {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .setupArea {
+    padding: 10px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dropdownLabel {
+    margin-bottom: 5px;
+    font-size: 0.84rem;
+  }
+
+  .dropdownButton {
+    padding: 11px 8px;
+    font-size: 0.96rem;
+  }
+
   .actionRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .startButton,
+  .secondaryButton {
+    min-height: 42px;
+    padding: 8px 6px;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    border-radius: 10px;
+  }
+
+  .gameArea {
+    padding: 10px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+
+  .scoreCard,
+  .targetArea,
+  .feedbackBlock {
+    padding: 9px;
+  }
+
+  .scoreValue {
+    font-size: 1.2rem;
+  }
+
+  .targetArea {
+    min-height: 94px;
+    gap: 6px;
+  }
+
+  .blinkSquare {
+    width: 56px;
+    height: 56px;
+  }
+
+  .statusLabel {
+    font-size: 0.86rem;
+  }
+
+  .feedbackArea {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .feedbackTitle {
+    font-size: 0.8rem;
+  }
+
+  .feedbackMeta {
+    font-size: 0.74rem;
+  }
+
+  .feedbackIcon {
+    font-size: 1.1rem;
+  }
+
+  .tempoFeedback,
+  .volumeFeedback {
+    padding: 5px 8px;
+    font-size: 0.84rem;
+  }
+
+  .meterRow {
+    margin-top: 8px;
+  }
+
+  .meterLabel {
+    margin-bottom: 4px;
+    font-size: 0.82rem;
   }
 }
